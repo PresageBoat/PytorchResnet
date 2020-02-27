@@ -10,9 +10,9 @@ class Bottleneck(nn.Module):
     def __init__(self, in_channels, filters, stride=1, is_downsample = False):
         super(Bottleneck, self).__init__()
         filter1, filter2, filter3 = filters
-        self.conv1 = nn.Conv2d(in_channels, filter1, kernel_size=1, stride=stride, bias=False)
+        self.conv1 = nn.Conv2d(in_channels, filter1, kernel_size=1, stride=1, bias=False)
         self.bn1 = nn.BatchNorm2d(filter1)
-        self.conv2 = nn.Conv2d(filter1, filter2, kernel_size=3, stride=1, padding=1, bias=False)
+        self.conv2 = nn.Conv2d(filter1, filter2, kernel_size=3, stride=stride, padding=1, bias=False)
         self.bn2 = nn.BatchNorm2d(filter2)
         self.conv3 = nn.Conv2d(filter2, filter3, kernel_size=1, stride=1, bias=False)
         self.bn3 = nn.BatchNorm2d(filter3)
