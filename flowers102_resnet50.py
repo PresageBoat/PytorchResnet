@@ -71,7 +71,7 @@ resnet50.fc = nn.Sequential(
 #使用gpu训练
 resnet50 = resnet50.to('cuda:0')
 #定义损失函数和优化器
-loss_func = nn.NLLLoss()
+loss_func = nn.CrossEntropyLoss()
 optimizer = optim.Adam(resnet50.parameters())
 
 
