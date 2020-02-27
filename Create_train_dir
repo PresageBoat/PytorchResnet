@@ -1,0 +1,101 @@
+#include <iostream>
+#include <sstream>
+#include <fstream>
+#include <ostream>
+#include <io.h>
+using namespace std;
+
+#include <thread>                // std::thread
+#include <mutex>                // std::mutex, std::unique_lock
+#include <condition_variable>    // std::condition_variable
+#include "opencv2/opencv.hpp"
+
+#include <boost/tokenizer.hpp>
+#include <boost/filesystem.hpp>
+#include <boost/algorithm/string.hpp>
+#include <windows.h>
+using namespace cv;
+namespace fs = boost::filesystem;
+
+bool GetDirFiles(string dir, vector<string> &filepath)
+{
+	fs::path fullpath(dir);
+	if (!fs::exists(fullpath))
+	{
+		return false;
+	}
+	fs::recursive_directory_iterator end_iter;
+	for (fs::recursive_directory_iterator iter(fullpath); iter != end_iter; iter++)
+	{
+		try {
+			if (!fs::is_directory(*iter) && (fs::extension(*iter) == ".jpg" || fs::extension(*iter) == ".JPG"
+				|| fs::extension(*iter) == ".jpeg" || fs::extension(*iter) == ".bmp" || fs::extension(*iter) == ".png"))
+			{
+				string name = iter->path().string();
+				filepath.emplace_back(name);
+			}
+		}
+		catch (const std::exception &ex) {
+			continue;
+		}
+	}
+	return true;
+}
+
+
+
+//std::mutex mtx; // 全局互斥锁.
+//std::condition_variable cv; // 全局条件变量.
+//bool ready = false; // 全局标志位.
+//void do_print_id(int id)
+//{
+//	std::unique_lock <std::mutex> lck(mtx);
+//	while (!ready) // 如果标志位不为 true, 则等待...
+//		cv.wait(lck); // 当前线程被阻塞, 当全局标志位变为 true 之后,
+//					  // 线程被唤醒, 继续往下执行打印线程编号id.
+//	std::cout << "thread " << id << '\n';
+//}
+
+
+
+//void go()
+//{
+//	std::unique_lock <std::mutex> lck(mtx);
+//	ready = false; // 设置全局标志位为 true.
+//	cv.notify_all(); // 唤醒所有线程.
+//}
+
+int main()
+{
+	//std::thread threads[10];
+	//// spawn 10 threads:
+	//for (int i = 0; i < 10; ++i)
+	//	threads[i] = std::thread(do_print_id, i);
+	//std::cout << "10 threads ready to race...\n";
+	//go(); // go!
+	//for (auto & th : threads)
+	//	th.join();
+	//getchar();
+	//return 0;
+
+	string lines_;
+	ifstream ifs("D:/102flowers/train.txt");
+	while (getline(ifs,lines_))
+	{
+		boost::char_separator<char> sep(" /\\");
+		typedef boost::tokenizer<boost::char_separator<char>> CustomTokenizer;
+		CustomTokenizer tok(lines_, sep);
+		vector<string> vecseg_tag;
+		for (CustomTokenizer::iterator beg = tok.begin(); beg != tok.end(); ++beg)
+			vecseg_tag.emplace_back(*beg);
+
+		string dir_fullpath = "D:/102flowers/train/" + vecseg_tag[1];
+		string image_fullpath = "D:/102flowers/jpg/" + vecseg_tag[0];
+		string save_fullpath = "D:/102flowers/train/"+ vecseg_tag[1]+"/" + vecseg_tag[0];
+		if (!boost::filesystem::exists(dir_fullpath))
+		{
+			boost::filesystem::create_directories(dir_fullpath);
+		}
+		CopyFile(image_fullpath.c_str(),save_fullpath.c_str(),TRUE);
+	}
+}
