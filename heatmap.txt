@@ -1,0 +1,7 @@
+//red important
+heatmap = np.maximum(heatmap, 0)
+heatmap /= np.max(heatmap)
+
+//blue important
+heatmap=heatmap-np.min(heatmap)
+heatmap /=np.max(heatmap)
