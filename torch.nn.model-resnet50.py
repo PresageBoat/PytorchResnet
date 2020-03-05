@@ -125,5 +125,3 @@ if __name__ == '__main__':
     preb_index = torch.argsort(output, dim=1, descending=True)[0]
     top5 = [(synset[preb_index[i]], output[0][preb_index[i]].item()) for i in range(5)]
     print(("Top5: ", top5))
- 
- 
