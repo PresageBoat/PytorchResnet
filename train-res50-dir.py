@@ -86,8 +86,6 @@ def train_and_valid(model, loss_function, optimizer, epochs=25):
         epoch_start = time.time()
         print("Epoch: {}/{}".format(epoch+1, epochs))
  
-        model.train()
- 
         train_loss = 0.0
         train_acc = 0.0
         valid_loss = 0.0
