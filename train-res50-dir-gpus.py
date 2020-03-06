@@ -106,14 +106,16 @@ def train_and_valid(model, loss_function, optimizer, epochs=25):
             optimizer.step()
             train_loss += loss.data.item()
             train_acc += torch.sum(pred == labels.data)
-        for data in valid_data:
-            inputs, labels = data
-            inputs, labels = inputs.cuda(device=device_ids[0]), labels.cuda(device=device_ids[0])
-            outputs = resnet50(inputs)
-            loss=loss_func(outputs,labels)
-            _, pred = torch.max(outputs.data, 1)
-            valid_loss+=loss.item()
-            valid_acc += torch.sum(pred == labels.data)
+	with torch.no_grad():
+		resnet50.eval()
+		for data in valid_data:
+		    inputs, labels = data
+		    inputs, labels = inputs.cuda(device=device_ids[0]), labels.cuda(device=device_ids[0])
+		    outputs = resnet50(inputs)
+		    loss=loss_func(outputs,labels)
+		    _, pred = torch.max(outputs.data, 1)
+		    valid_loss+=loss.item()
+		    valid_acc += torch.sum(pred == labels.data)
 
         avg_train_loss = train_loss/train_data_size
         avg_train_acc = train_acc.to(torch.float32)/train_data_size
