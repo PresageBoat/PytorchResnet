@@ -108,7 +108,7 @@ def train_and_valid(model, loss_function, optimizer, epochs=25):
             correct_counts = predictions.eq(labels.data.view_as(predictions))
             acc = torch.mean(correct_counts.type(torch.FloatTensor))
             train_acc += acc.item() * inputs.size(0)
- 
+ 	# In test phase, we don't need to compute gradients (for memory efficiency)
         with torch.no_grad():
             model.eval()
  
