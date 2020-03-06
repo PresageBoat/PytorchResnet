@@ -99,22 +99,14 @@ def train_and_valid(model, loss_function, optimizer, epochs=25):
  
             #因为这里梯度是累加的，所以每次记得清零
             optimizer.zero_grad()
- 
             outputs = model(inputs)
- 
             loss = loss_function(outputs, labels)
- 
             loss.backward()
- 
             optimizer.step()
- 
             train_loss += loss.item() * inputs.size(0)
- 
             ret, predictions = torch.max(outputs.data, 1)
             correct_counts = predictions.eq(labels.data.view_as(predictions))
- 
             acc = torch.mean(correct_counts.type(torch.FloatTensor))
- 
             train_acc += acc.item() * inputs.size(0)
  
         with torch.no_grad():
@@ -123,18 +115,12 @@ def train_and_valid(model, loss_function, optimizer, epochs=25):
             for j, (inputs, labels) in enumerate(valid_data):
                 inputs = inputs.to(device)
                 labels = labels.to(device)
- 
                 outputs = model(inputs)
- 
                 loss = loss_function(outputs, labels)
- 
                 valid_loss += loss.item() * inputs.size(0)
- 
                 ret, predictions = torch.max(outputs.data, 1)
                 correct_counts = predictions.eq(labels.data.view_as(predictions))
- 
                 acc = torch.mean(correct_counts.type(torch.FloatTensor))
- 
                 valid_acc += acc.item() * inputs.size(0)
  
         avg_train_loss = train_loss/train_data_size
