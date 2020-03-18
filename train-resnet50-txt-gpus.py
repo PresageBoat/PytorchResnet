@@ -130,7 +130,7 @@ def train_and_valid(model, loss_function, optimizer, epochs=25):
         train_acc = 0.0
         valid_loss = 0.0
         valid_acc = 0.0
-        scheduler.step()
+
         for data in tqdm(train_data):
             inputs, labels = data
             # 注意数据也是放在主设备
@@ -155,6 +155,7 @@ def train_and_valid(model, loss_function, optimizer, epochs=25):
                 valid_loss += loss.item()
                 valid_acc += torch.sum(pred == labels.data)
                 
+        scheduler.step()                
         resnet50.train()
 
         avg_train_loss = train_loss / train_data_size
