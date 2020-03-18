@@ -120,6 +120,7 @@ def train_and_valid(model, loss_function, optimizer, epochs=25):
     history = []
     best_acc = 0.0
     best_epoch = 0
+    resnet50.train()
 
     for epoch in range(epochs):
         epoch_start = time.time()
@@ -153,6 +154,8 @@ def train_and_valid(model, loss_function, optimizer, epochs=25):
                 _, pred = torch.max(outputs.data, 1)
                 valid_loss += loss.item()
                 valid_acc += torch.sum(pred == labels.data)
+                
+        resnet50.train()
 
         avg_train_loss = train_loss / train_data_size
         avg_train_acc = train_acc.to(torch.float32) / train_data_size
